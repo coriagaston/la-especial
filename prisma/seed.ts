@@ -6,7 +6,8 @@ import bcrypt from "bcryptjs";
 
 const dbUrl = process.env.DATABASE_URL
   ?? `file:${resolve(process.cwd(), "dev.db").replace(/\\/g, "/")}`;
-const adapter = new PrismaLibSql({ url: dbUrl });
+const authToken = process.env.DATABASE_AUTH_TOKEN;
+const adapter = new PrismaLibSql({ url: dbUrl, ...(authToken && { authToken }) });
 const prisma = new PrismaClient({ adapter });
 
 function today(): string {
