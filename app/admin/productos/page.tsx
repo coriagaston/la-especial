@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import Image from "next/image";
 
 interface Product {
   id: number;
@@ -9,6 +10,7 @@ interface Product {
   price: number;
   available: boolean;
   sortOrder: number;
+  imageUrl: string | null;
 }
 
 interface Category {
@@ -32,11 +34,73 @@ const categoryEmojis: Record<string, string> = {
   salsas: "🥫",
 };
 
+function ImageUploadCell({
+  product,
+  onUploaded,
+}: {
+  product: Product;
+  onUploaded: (productId: number, url: string) => void;
+}) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [uploading, setUploading] = useState(false);
+  const [preview, setPreview] = useState<string | null>(product.imageUrl);
+
+  const handleFile = async (file: File) => {
+    setUploading(true);
+    const form = new FormData();
+    form.append("file", file);
+    try {
+      const res = await fetch("/api/admin/upload", { method: "POST", body: form });
+      const data = await res.json();
+      if (data.url) {
+        setPreview(data.url);
+        onUploaded(product.id, data.url);
+      }
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  return (
+    <div className="flex items-center gap-2">
+      {preview ? (
+        <div className="relative w-12 h-12 rounded-lg overflow-hidden border border-gray-200 flex-shrink-0">
+          <Image src={preview} alt={product.name} fill className="object-cover" />
+        </div>
+      ) : (
+        <div className="w-12 h-12 rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center text-gray-400 flex-shrink-0">
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          </svg>
+        </div>
+      )}
+      <button
+        type="button"
+        onClick={() => inputRef.current?.click()}
+        disabled={uploading}
+        className="text-xs px-2 py-1 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-50 transition-colors disabled:opacity-50 whitespace-nowrap"
+      >
+        {uploading ? "..." : preview ? "Cambiar" : "Subir"}
+      </button>
+      <input
+        ref={inputRef}
+        type="file"
+        accept="image/*"
+        className="hidden"
+        onChange={(e) => {
+          const file = e.target.files?.[0];
+          if (file) handleFile(file);
+        }}
+      />
+    </div>
+  );
+}
+
 export default function AdminProductos() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [changes, setChanges] = useState<
-    Record<number, { price?: number; available?: boolean }>
+    Record<number, { price?: number; available?: boolean; imageUrl?: string | null }>
   >({});
   const [saving, setSaving] = useState(false);
   const [saveMessage, setSaveMessage] = useState("");
@@ -65,11 +129,29 @@ export default function AdminProductos() {
     }));
   };
 
+  const handleImageUploaded = (productId: number, url: string) => {
+    setChanges((prev) => ({
+      ...prev,
+      [productId]: { ...prev[productId], imageUrl: url },
+    }));
+  };
+
   const getProductValue = (product: Product, field: "price" | "available") => {
     if (changes[product.id]?.[field] !== undefined) {
       return changes[product.id][field];
     }
     return product[field];
+  };
+
+  const getProductWithChanges = (product: Product): Product => {
+    const change = changes[product.id];
+    if (!change) return product;
+    return {
+      ...product,
+      price: change.price ?? product.price,
+      available: change.available ?? product.available,
+      imageUrl: change.imageUrl !== undefined ? change.imageUrl : product.imageUrl,
+    };
   };
 
   const handleSave = async () => {
@@ -96,19 +178,10 @@ export default function AdminProductos() {
 
       if (!res.ok) throw new Error("Error al guardar");
 
-      // Apply changes to local state
       setCategories((prev) =>
         prev.map((cat) => ({
           ...cat,
-          products: cat.products.map((p) => {
-            const change = changes[p.id];
-            if (!change) return p;
-            return {
-              ...p,
-              price: change.price ?? p.price,
-              available: change.available ?? p.available,
-            };
-          }),
+          products: cat.products.map((p) => getProductWithChanges(p)),
         }))
       );
 
@@ -151,7 +224,7 @@ export default function AdminProductos() {
         </div>
       </div>
       <p className="text-gray-500 mb-8">
-        Actualizá precios y disponibilidad. Los cambios se guardan todos juntos al presionar Guardar.
+        Actualizá precios, disponibilidad y fotos. Los cambios se guardan al presionar Guardar.
       </p>
 
       {loading ? (
@@ -181,6 +254,9 @@ export default function AdminProductos() {
                       <th className="text-left px-4 py-3 font-semibold text-gray-700">
                         Producto
                       </th>
+                      <th className="text-left px-4 py-3 font-semibold text-gray-700 w-36">
+                        Foto
+                      </th>
                       <th className="text-right px-4 py-3 font-semibold text-gray-700 w-32">
                         Precio ($)
                       </th>
@@ -194,6 +270,7 @@ export default function AdminProductos() {
                       const currentPrice = getProductValue(product, "price") as number;
                       const currentAvailable = getProductValue(product, "available") as boolean;
                       const hasChange = !!changes[product.id];
+                      const productWithChanges = getProductWithChanges(product);
 
                       return (
                         <tr
@@ -207,6 +284,12 @@ export default function AdminProductos() {
                             {product.description && (
                               <p className="text-xs text-gray-400">{product.description}</p>
                             )}
+                          </td>
+                          <td className="px-4 py-3">
+                            <ImageUploadCell
+                              product={productWithChanges}
+                              onUploaded={handleImageUploaded}
+                            />
                           </td>
                           <td className="px-4 py-3">
                             <div className="flex justify-end">

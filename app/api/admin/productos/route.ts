@@ -36,7 +36,7 @@ export async function PATCH(req: NextRequest) {
   try {
     const body = await req.json();
     const { updates } = body as {
-      updates: Array<{ id: number; price?: number; available?: boolean }>;
+      updates: Array<{ id: number; price?: number; available?: boolean; imageUrl?: string | null }>;
     };
 
     if (!Array.isArray(updates)) {
@@ -53,6 +53,7 @@ export async function PATCH(req: NextRequest) {
           data: {
             ...(update.price !== undefined && { price: update.price }),
             ...(update.available !== undefined && { available: update.available }),
+            ...("imageUrl" in update && { imageUrl: update.imageUrl }),
           },
         })
       )

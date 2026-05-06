@@ -99,6 +99,7 @@ export default async function MenuPage() {
                   price={product.price}
                   category={category.name}
                   available={product.available}
+                  imageUrl={product.imageUrl}
                 />
               ))}
             </div>

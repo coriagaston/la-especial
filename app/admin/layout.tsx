@@ -1,6 +1,5 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import { redirect } from "next/navigation";
 import Link from "next/link";
 
 export default async function AdminLayout({
@@ -10,8 +9,9 @@ export default async function AdminLayout({
 }) {
   const session = await getServerSession(authOptions);
 
+  // Login page: no nav, solo renderiza children
   if (!session) {
-    redirect("/admin/login");
+    return <>{children}</>;
   }
 
   return (
