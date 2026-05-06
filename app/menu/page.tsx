@@ -2,6 +2,8 @@ import { prisma } from "@/lib/db";
 import ProductCard from "@/components/ProductCard";
 import Link from "next/link";
 
+export const dynamic = "force-dynamic";
+
 const categoryEmojis: Record<string, string> = {
   sorrentinos: "🫓",
   ravioles: "🍝",

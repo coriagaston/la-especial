@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { prisma } from "@/lib/db";
 
+export const dynamic = "force-dynamic";
+
 function getTodayString(): string {
   const today = new Date();
   return today.toISOString().split("T")[0];

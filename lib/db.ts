@@ -2,14 +2,11 @@ import { PrismaClient } from "@/app/generated/prisma";
 import { PrismaLibSql } from "@prisma/adapter-libsql";
 import path from "path";
 
-function makeUrl() {
-  if (process.env.DATABASE_URL) return process.env.DATABASE_URL;
-  const abs = path.resolve(process.cwd(), "dev.db").replace(/\\/g, "/");
-  return `file:${abs}`;
-}
-
 function createPrismaClient() {
-  const adapter = new PrismaLibSql({ url: makeUrl() });
+  const url = process.env.DATABASE_URL
+    ?? `file:${path.resolve(process.cwd(), "dev.db").replace(/\\/g, "/")}`;
+  const authToken = process.env.DATABASE_AUTH_TOKEN;
+  const adapter = new PrismaLibSql({ url, ...(authToken && { authToken }) });
   return new PrismaClient({ adapter });
 }
 
