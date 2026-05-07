@@ -45,3 +45,11 @@ model AdminUser {
   password String
   name     String
 }
+
+model Subscriber {
+  id        Int      @id @default(autoincrement())
+  name      String
+  phone     String
+  email     String   @unique
+  createdAt DateTime @default(now())
+}

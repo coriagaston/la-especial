@@ -26,17 +26,14 @@ export default async function AdminLayout({
             La Especial. Admin
           </Link>
           <div className="flex gap-3">
-            <Link
-              href="/admin/viandas"
-              className="text-sm font-medium text-white/80 hover:text-white transition-colors"
-            >
+            <Link href="/admin/viandas" className="text-sm font-medium text-white/80 hover:text-white transition-colors">
               Viandas
             </Link>
-            <Link
-              href="/admin/productos"
-              className="text-sm font-medium text-white/80 hover:text-white transition-colors"
-            >
+            <Link href="/admin/productos" className="text-sm font-medium text-white/80 hover:text-white transition-colors">
               Productos
+            </Link>
+            <Link href="/admin/suscriptores" className="text-sm font-medium text-white/80 hover:text-white transition-colors">
+              Suscriptores
             </Link>
           </div>
         </div>

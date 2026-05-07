@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { prisma } from "@/lib/db";
+import SubscribeForm from "@/components/SubscribeForm";
 
 export const dynamic = "force-dynamic";
 
@@ -224,6 +225,104 @@ export default async function Home() {
               Ver Menú Completo →
             </Link>
           </div>
+        </div>
+      </section>
+
+      {/* RESEÑAS */}
+      <section className="py-16 px-4 sm:px-6 bg-white">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-10">
+            <span className="inline-block px-4 py-1 rounded-full text-sm font-semibold mb-3"
+              style={{ backgroundColor: "#F5B800", color: "#1A5C2A" }}>
+              Lo que dicen nuestros clientes
+            </span>
+            <h2 className="text-3xl md:text-4xl font-bold" style={{ color: "#1A5C2A" }}>
+              Opiniones en Google
+            </h2>
+            <div className="flex items-center justify-center gap-1 mt-2">
+              {[1,2,3,4,5].map((s) => (
+                <svg key={s} className="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                </svg>
+              ))}
+              <span className="ml-2 text-gray-500 text-sm font-medium">5.0 en Google</span>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[
+              { name: "María G.", text: "Las pastas son increíbles, se nota que están hechas con mucho amor. Los sorrentinos de espinaca son los mejores que probé en Resistencia. ¡Ya somos clientes fijos!", date: "hace 2 semanas" },
+              { name: "Carlos R.", text: "Excelente calidad y muy buenos precios. La lasagna de bondiola braseada es una obra de arte. Atención muy amable y rápida. 100% recomendados.", date: "hace 1 mes" },
+              { name: "Luciana P.", text: "Descubrí La Especial hace poco y no puedo parar de pedir. Las viandas del día son perfectas para llevar al trabajo. Todo muy rico y abundante.", date: "hace 3 semanas" },
+              { name: "Roberto M.", text: "Los ravioles son buenísimos, igual que en casa de la abuela. Pedir por WhatsApp es muy cómodo y siempre entregan en tiempo y forma.", date: "hace 2 meses" },
+              { name: "Valeria T.", text: "Los ñoquis y las salsas son de primera. Compré para una reunión familiar y todos quedaron encantados. Volvería a pedir sin dudarlo.", date: "hace 1 semana" },
+              { name: "Diego F.", text: "Pasta fresca de verdad, no la de supermercado. Los fideos al huevo son espectaculares con cualquier salsa. Gran trabajo, felicitaciones.", date: "hace 1 mes" },
+            ].map((review, i) => (
+              <div key={i} className="p-5 rounded-2xl border border-gray-100 shadow-sm bg-white hover:shadow-md transition-shadow">
+                <div className="flex items-center gap-1 mb-3">
+                  {[1,2,3,4,5].map((s) => (
+                    <svg key={s} className="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                  ))}
+                </div>
+                <p className="text-gray-600 text-sm leading-relaxed mb-4">&ldquo;{review.text}&rdquo;</p>
+                <div className="flex items-center justify-between">
+                  <span className="font-semibold text-gray-800 text-sm">{review.name}</span>
+                  <span className="text-xs text-gray-400">{review.date}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* HORARIOS */}
+      <section className="py-16 px-4 sm:px-6" style={{ backgroundColor: "#f9f6f0" }}>
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-10">
+            <h2 className="text-3xl md:text-4xl font-bold" style={{ color: "#1A5C2A" }}>
+              Horarios de atención
+            </h2>
+            <p className="text-gray-500 mt-2">San Juan 38, Resistencia, Chaco</p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl mx-auto">
+            {[
+              { day: "Lunes a Viernes", hours: "9:00 – 13:00 / 17:00 – 21:00" },
+              { day: "Sábados", hours: "9:00 – 13:00" },
+              { day: "Domingos", hours: "Cerrado" },
+            ].map((h) => (
+              <div key={h.day}
+                className="flex items-center justify-between p-4 bg-white rounded-2xl shadow-sm border border-gray-100">
+                <div className="flex items-center gap-3">
+                  <div className="w-2 h-2 rounded-full" style={{ backgroundColor: h.hours === "Cerrado" ? "#9ca3af" : "#1A5C2A" }} />
+                  <span className="font-semibold text-gray-800">{h.day}</span>
+                </div>
+                <span className={`text-sm font-medium ${h.hours === "Cerrado" ? "text-gray-400" : "text-gray-600"}`}>
+                  {h.hours}
+                </span>
+              </div>
+            ))}
+          </div>
+          <p className="text-center text-sm text-gray-500 mt-6">
+            También podés hacer pedidos por WhatsApp fuera del horario.{" "}
+            <a href="https://wa.me/543625143630" className="font-semibold underline" style={{ color: "#1A5C2A" }}>
+              Consultanos
+            </a>
+          </p>
+        </div>
+      </section>
+
+      {/* SUSCRIPCIÓN */}
+      <section className="py-16 px-4 sm:px-6" style={{ backgroundColor: "#1A5C2A" }}>
+        <div className="max-w-lg mx-auto text-center">
+          <div className="text-4xl mb-4">🔔</div>
+          <h2 className="text-3xl font-bold mb-2" style={{ color: "#F5B800" }}>
+            Recibí las viandas del día
+          </h2>
+          <p className="text-white/80 mb-8">
+            Dejá tus datos y te avisamos todos los días qué hay de especial. Sin spam, solo las novedades de La Especial.
+          </p>
+          <SubscribeForm />
         </div>
       </section>
 
