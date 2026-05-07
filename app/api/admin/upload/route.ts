@@ -57,7 +57,14 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ url: result.secure_url });
   } catch (err) {
-    const msg = err instanceof Error ? err.message : "Error desconocido";
-    return NextResponse.json({ error: `Error al subir imagen: ${msg}` }, { status: 500 });
+    let msg = "Error desconocido";
+    if (err instanceof Error) {
+      msg = err.message;
+    } else if (err && typeof err === "object") {
+      const e = err as Record<string, unknown>;
+      msg = String(e.message ?? e.http_code ?? JSON.stringify(err));
+    }
+    console.error("Cloudinary upload error:", JSON.stringify(err));
+    return NextResponse.json({ error: msg }, { status: 500 });
   }
 }
