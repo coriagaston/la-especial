@@ -45,15 +45,16 @@ function ImageUploadCell({ product, onUploaded }: { product: Product; onUploaded
     form.append("file", file);
     try {
       const res = await fetch("/api/admin/upload", { method: "POST", body: form });
-      const data = await res.json();
+      let data: Record<string, string> = {};
+      try { data = await res.json(); } catch { /* respuesta no-JSON */ }
       if (!res.ok) {
-        setError(data.error || `Error ${res.status}`);
+        setError(data.error || `Error ${res.status} — revisá las credenciales de Cloudinary`);
         return;
       }
       setPreview(data.url);
       onUploaded(product.id, data.url);
     } catch (e) {
-      setError("No se pudo conectar con el servidor.");
+      setError("Error de red. Verificá tu conexión a internet.");
       console.error(e);
     } finally {
       setUploading(false);

@@ -370,14 +370,20 @@ export default async function Home() {
             </a>
 
             {/* Address */}
-            <div className="flex flex-col items-center gap-3 p-6 rounded-2xl bg-white/10">
+            <a
+              href="https://maps.google.com/?q=San+Juan+38,+Resistencia,+Chaco,+Argentina"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex flex-col items-center gap-3 p-6 rounded-2xl bg-white/10 hover:bg-white/20 transition-colors"
+            >
               <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{ color: "#F5B800" }}>
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
               <span className="font-semibold">Dirección</span>
               <span className="text-sm opacity-70 text-center">San Juan 38, Resistencia, Chaco</span>
-            </div>
+              <span className="text-xs underline opacity-50">Ver en Google Maps →</span>
+            </a>
           </div>
 
           <a

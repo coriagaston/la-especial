@@ -35,7 +35,7 @@ export default function SubscribeForm() {
     return (
       <div className="text-center py-8">
         <div className="text-4xl mb-3">✅</div>
-        <p className="text-white font-semibold text-lg">{message}</p>
+        <p className="font-semibold text-lg" style={{ color: "#F5B800" }}>{message}</p>
       </div>
     );
   }
@@ -48,7 +48,12 @@ export default function SubscribeForm() {
         value={form.name}
         onChange={(e) => setForm({ ...form, name: e.target.value })}
         required
-        className="w-full px-4 py-3 rounded-xl text-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
+        className="w-full px-4 py-3 rounded-xl text-sm focus:outline-none focus:ring-2"
+        style={{
+          backgroundColor: "rgba(255,255,255,0.15)",
+          border: "1.5px solid rgba(255,255,255,0.4)",
+          color: "#fff",
+        }}
       />
       <input
         type="tel"
@@ -56,7 +61,12 @@ export default function SubscribeForm() {
         value={form.phone}
         onChange={(e) => setForm({ ...form, phone: e.target.value })}
         required
-        className="w-full px-4 py-3 rounded-xl text-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
+        className="w-full px-4 py-3 rounded-xl text-sm focus:outline-none focus:ring-2"
+        style={{
+          backgroundColor: "rgba(255,255,255,0.15)",
+          border: "1.5px solid rgba(255,255,255,0.4)",
+          color: "#fff",
+        }}
       />
       <input
         type="email"
@@ -64,7 +74,12 @@ export default function SubscribeForm() {
         value={form.email}
         onChange={(e) => setForm({ ...form, email: e.target.value })}
         required
-        className="w-full px-4 py-3 rounded-xl text-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
+        className="w-full px-4 py-3 rounded-xl text-sm focus:outline-none focus:ring-2"
+        style={{
+          backgroundColor: "rgba(255,255,255,0.15)",
+          border: "1.5px solid rgba(255,255,255,0.4)",
+          color: "#fff",
+        }}
       />
       {status === "error" && (
         <p className="text-yellow-300 text-sm text-center">{message}</p>
@@ -77,6 +92,9 @@ export default function SubscribeForm() {
       >
         {status === "loading" ? "Registrando..." : "Quiero recibir las viandas del día"}
       </button>
+      <style>{`
+        input::placeholder { color: rgba(255,255,255,0.6); }
+      `}</style>
     </form>
   );
 }
